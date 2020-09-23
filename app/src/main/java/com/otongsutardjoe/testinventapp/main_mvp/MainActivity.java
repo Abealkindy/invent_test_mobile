@@ -104,10 +104,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public void onGetDataSuccess(ProductAndPriceModel productAndPriceModel) {
         Log.e("resultHitWithPrice", new Gson().toJson(productAndPriceModel.getValue()));
-        if (!dataPresenter.hasNotID(productAndPriceModel)) {
-            progressDialog.dismiss();
-            onGetDataLocalSuccess(localAppDB.productAndPriceDAO().getProductAndPriceJoin());
-        }
+        progressDialog.dismiss();
+        onGetDataLocalSuccess(localAppDB.productAndPriceDAO().getProductAndPriceJoin());
     }
 
     @Override

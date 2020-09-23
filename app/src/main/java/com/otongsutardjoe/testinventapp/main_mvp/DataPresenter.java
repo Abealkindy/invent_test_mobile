@@ -42,11 +42,12 @@ public class DataPresenter {
                             @Override
                             public void onNext(ProductAndPriceModel productAndPriceModel) {
                                 if (productAndPriceModel.getStatus_code().equalsIgnoreCase(Const.success_code)) {
+                                    isiDataLocal(productAndPriceModel);
                                     if (hasNotID(productAndPriceModel)) {
                                         getDataApaAja(Const.getProductAndPriceURL, context, "db");
+                                    } else {
+                                        balikanListener.onGetDataSuccess(productAndPriceModel);
                                     }
-                                    isiDataLocal(productAndPriceModel);
-                                    balikanListener.onGetDataSuccess(productAndPriceModel);
                                 } else {
                                     hitFailedHandler(localAppDB.productAndPriceDAO().getProductAndPriceJoin(), productAndPriceModel.getStatus_message_eng());
                                 }
