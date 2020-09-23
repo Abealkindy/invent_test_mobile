@@ -61,12 +61,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
             conditioningIf();
         });
-        mBinding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mBinding.swipeRefresh.setRefreshing(false);
-                hitAPI(Const.getProductURL, MainActivity.this, "db");
-            }
+        mBinding.swipeRefresh.setOnRefreshListener(() -> {
+            mBinding.swipeRefresh.setRefreshing(false);
+            hitAPI(Const.getProductURL, MainActivity.this, "db");
         });
     }
 
