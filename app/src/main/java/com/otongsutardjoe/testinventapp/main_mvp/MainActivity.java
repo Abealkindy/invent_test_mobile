@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -59,6 +60,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 mBinding.imageSortByAlpha.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.alpha_desc));
             }
             conditioningIf();
+        });
+        mBinding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mBinding.swipeRefresh.setRefreshing(false);
+                hitAPI(Const.getProductURL, MainActivity.this, "db");
+            }
         });
     }
 
