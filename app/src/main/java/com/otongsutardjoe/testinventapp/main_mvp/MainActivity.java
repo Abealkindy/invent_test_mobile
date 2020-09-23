@@ -5,6 +5,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DataPresenter dataPresenter = new DataPresenter(this);
     ActivityMainBinding mBinding;
     private boolean isAlphaDesc = false, isPriceDesc = false;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +77,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void initUI() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Please kindly wait...");
         hitAPI(Const.getProductURL, this, "db");
     }
 
     private void hitAPI(String URL, Context context, String type) {
+        progressDialog.show();
         dataPresenter.getDataApaAja(URL, context, type);
     }
 
@@ -94,12 +101,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public void onGetDataSuccess(ProductAndPriceModel productAndPriceModel) {
         Log.e("resultHitWithPrice", new Gson().toJson(productAndPriceModel.getValue()));
         if (!dataPresenter.hasNotID(productAndPriceModel)) {
+            progressDialog.dismiss();
             onGetDataLocalSuccess(localAppDB.productAndPriceDAO().getProductAndPriceJoin());
         }
     }
 
     @Override
     public void onGetDataLocalSuccess(List<ProductAndPriceModel.DataValue> dataValues) {
+        progressDialog.dismiss();
         mBinding.recylerProduct.setVisibility(View.VISIBLE);
         mBinding.linearError.setVisibility(View.GONE);
         mBinding.recylerProduct.setAdapter(new RecyclerProductAdapter(this, dataValues));
@@ -107,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public void onGetDataFailed(String message) {
+        progressDialog.dismiss();
         showErrorLayout(message);
     }
 
